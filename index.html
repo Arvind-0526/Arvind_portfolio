@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Arvind M | Portfolio</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/cascadia-code" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Desktop Popup -->
+  <div id="desktop-popup-overlay"></div>
+  <div id="desktop-popup">
+    <p>This website is optimized for desktop view. Do you want to continue in desktop mode?</p>
+    <button id="desktop-popup-close">Continue</button>
+  </div>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">Arvind.M</div>
+      <ul class="nav-links">
+  <li><a href="#home">Home</a></li>
+  <li><a href="#about">About</a></li>
+  <li><a href="#work">Work</a></li> <!-- FIXED -->
+  <li><a href="#services">Skills</a></li>
+  <li><a href="#education-certifications">Education & Certification</a></li>
+</ul>
+      <a href="#contact" class="contact-btn">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+
+      <!-- Big left text -->
+      <h1 class="big-left">I AM <br> ARVIND</h1>
+
+      <!-- Profile Image -->
+      <div class="profile-container">
+        <span class="left-text">Hey,</span>
+        <img src="images/profile.png" alt="Arvind M">
+        <span class="right-text">there</span>
+      </div>
+
+      <!-- Resume Button -->
+      <div class="resume-btn">
+        <button class="glow-on-hover">Resume</button>
+        <a href="images/Resume.pdf" download></a>
+      </div>
+
+      <!-- Big right text -->
+      <h1 class="big-right">FULL-STACK <br> DEVELOPER</h1>
+
+      <!-- Right small skills -->
+      <div class="skills">
+        Specialized in Web Design, UX/UI, WordPress, Hosting, <br>
+        Front-End Development & Freelance Web Apps.
+      </div>
+
+      <!-- Smooth scroll button -->
+      <a href="#about" class="scroll-btn"></a>
+    </div>
+  </section>
+
+  <!-- Inline Styles -->
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fff;
+      color: #000;
+      scroll-behavior: smooth;
+    }
+
+    /* Home Page Section */
+    .home {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(to bottom right, #fff, #fdf5e6);
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+  </style>
+
+  <!-- Dark Mode Button -->
+  <button id="dark-toggle" class="dark-toggle">🌙</button>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Pin the hero section
+    ScrollTrigger.create({
+      trigger: ".hero",
+      start: "top top",
+      end: "bottom top",
+      pin: true,
+      pinSpacing: false,
+    });
+
+    // Animate About section
+    gsap.from(".about-section", {
+      y: "100%",
+      opacity: 0,
+      scrollTrigger: {
+        trigger: ".about-section",
+        start: "top bottom",
+        end: "top center",
+        scrub: true
+      }
+    });
+  </script>
+
+  <!-- About Section -->
+  <section class="about-section" id="about">
+    <!-- Background -->
+    <div class="background">
+      <span class="ball"></span>
+      <span class="ball"></span>
+      <span class="ball"></span>
+      <span class="ball"></span>
+      <span class="ball"></span>
+      <span class="ball"></span>
+      <span class="ball"></span>
+      <span class="ball"></span>
+    </div>
+
+    <div class="about-container">
+      <!-- Left: Cards -->
+      <div class="container">
+        <div class="card">
+          <div class="face face1">
+            <img src="images/card1.jpg" alt="Card 1">
+          </div>
+          <div class="face face2"><h2>01</h2></div>
+        </div>
+
+        <div class="card">
+          <div class="face face1">
+            <img src="images/card2.jpg" alt="Card 2">
+          </div>
+          <div class="face face2"><h2>02</h2></div>
+        </div>
+
+        <div class="card">
+          <div class="face face1">
+            <img src="images/card3.jpg" alt="Card 3">
+          </div>
+          <div class="face face2"><h2>03</h2></div>
+        </div>
+      </div>
+
+      <!-- Right: About Text -->
+      <div class="about-text">
+        <h2>About Me</h2>
+        <h6>A Small Story About Me</h6>
+        <p class="quote">“Tech, creativity, and storytelling – that’s what drives me.”</p>
+
+        <p>Hi, I’m someone who enjoys wearing many hats—<span>Network &amp; WebHost Engineer, PR Manager, freelancer, and passionate photographer.</span></p>
+        <p>My journey into the digital world began not with a job, but with a simple curiosity: solving problems with computers. That early passion for troubleshooting PCs and laptops for friends soon evolved into a deeper fascination with <span>fixing problems, networking, websites, web hosting, IoT,</span> and digital platforms.</p>
+        <p>I began my professional career as a <span>Junior Support Engineer at SeekaHost Ltd</span>, where I quickly mastered WHM, WordPress, and cPanel. I spent my early days resolving tickets, assisting customers, and learning the ins and outs of the hosting world. With time, my adaptability and communication skills helped me step into the role of <span>PR Manager</span>, where I now balance both brand communication and technical operations.</p>
+        <p>My freelancing journey started around the same time. It began with PC and laptop troubleshooting for friends and clients, and later expanded into website development, digital marketing, and photoshoots. While working at SeekaHost, I faced a serious accident that took nearly a year of recovery. During that challenging period, freelancing became my creative outlet and professional focus — allowing me to work at my own pace, learn new skills, and collaborate with people from different industries while building something meaningful during recovery.</p>
+        <p>Photography, in particular, has always been close to my heart. For me, it’s more than just clicking pictures — it’s about capturing stories, emotions, and perspectives. That passion naturally blended into my freelancing, helping me provide clients with not just websites and campaigns, but visuals that truly bring their brand to life.</p>
+        <p>At the core, I enjoy connecting the dots between <span>technology, creativity, and people.</span> Whether it’s through hosting, digital marketing, IoT, or photography, I love building experiences that leave a lasting impact.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Intersection Observer Animation -->
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.container, .about-text')
+      .forEach(el => observer.observe(el));
+  </script>
+
+<!--Work TIMELINE-->
+
+<section class="work-section" id="work">
+
+   <!-- Particle Canvas -->
+  <canvas id="particles"></canvas>
+
+ <!-- Wavy Background -->
+  <div class="wave">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <h1 class="section-title">Work Experience</h1>
+
+
+
+   <div class="cards-container">
+      <ul class="cards" style="--items: 26;">
+        <li style="--i: 0;">
+          <input type="radio" id="item-0" name="gallery-item" checked>
+         <label for="item-0">Present</label>
+      <h2>Freelancing</h2>
+      <p>Web Development, Digital Marketing & Photography – Started with PC/laptop troubleshooting and expanded into website development, SEO, branding, photography, and creative campaigns.</p>
+    </li>
+
+        <li style="--i: 1;">
+          <input type="radio" id="item-1" name="gallery-item">
+           <label for="item-1">2025</label>
+      <h2>Seekahost Ltd | PR Manager</h2>
+      <p>Jan 2024 – Jan 2025 – Managed brand communications, trained new joiners, and created engaging content/videos while balancing technical and promotional strategies.</p>
+    </li>
+
+        <li style="--i: 2;">
+          <input type="radio" id="item-2" name="gallery-item">
+          <label for="item-2">2024</label>
+      <h2>Seekahost Ltd | Junior Support Engineer</h2>
+      <p>Dec 2023 – Dec 2024 – Provided WordPress, cPanel, and domain support, improving ticket resolution and client satisfaction.</p>
+    </li>
+
+        <li style="--i: 3;">
+          <input type="radio" id="item-3" name="gallery-item">
+         <label for="item-3">2022</label>
+      <h2>Academic Project – Smart Wheelchair (IoT)</h2>
+      <p>Final Year Project (IJRPR Published) – Designed and published an Ultrasonic-Based Voice-Activated Smart Wheelchair showcasing innovation in assistive technology and IoT.</p>
+    </li>
+
+
+        <li style="--i: 4;">
+          <input type="radio" id="item-4" name="gallery-item">
+          <label for="item-4">2019</label>
+      <h2>2019 – 2024 RJ Electronics | Technical Support Technician</h2>
+      <p>Handled computer assembling, PC/laptop servicing, hardware/software troubleshooting, and LAN/Wi-Fi configuration.</p>
+    </li>
+
+        <!-- keep your other <li> items here (🏃 placeholders) -->
+      </ul>
+    </div>
+
+
+</section>
+
+<script>
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+let particlesArray = [];
+let numParticles = 60; // adjust count
+
+// Resize canvas
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = document.querySelector(".work-section").offsetHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+// Particle class
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 3 + 1;
+    this.speed = Math.random() * 1 + 0.5;
+  }
+  update() {
+    this.y -= this.speed;
+    if (this.y < -10) {
+      this.y = canvas.height + 10;
+      this.x = Math.random() * canvas.width;
+    }
+  }
+  draw() {
+    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+  }
+}
+
+// Init particles
+function initParticles() {
+  particlesArray = [];
+  for (let i = 0; i < numParticles; i++) {
+    particlesArray.push(new Particle());
+  }
+}
+initParticles();
+
+// Animate
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particlesArray.forEach(p => {
+    p.update();
+    p.draw();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+
+<!----------------- WORK SECTION TimeLine END ----------------->
+<!-- ================= Skills Section ================= -->
+  <section id="services" class="skills-section">
+
+    <!-- Animated Background -->
+    <div class="wrapper">
+      <div class="blob"></div>
+      <div class="blob"></div>
+      <div class="blob"></div>
+    </div>
+
+    <h2 class="section-title">My Skills</h2>
+    <div class="skills-grid">
+      <!-- Skill Item -->
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front">
+            <img src="images/OS LOGO.png" alt="cPanel">
+          </div>
+          <div class="card-back">
+            <h3>Operating Systems</h3>
+            <p>Windows/Linux installation, troubleshooting, and system optimization.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front">
+            <img src="images/cPanel LOGO.png" alt="CSS">
+          </div>
+          <div class="card-back">
+            <h3>cPanel</h3>
+            <p>Experienced in managing hosting, email, domains, and website deployments with cPanel.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front">
+            <img src="images/WHM LOGO.png" alt="DNS">
+          </div>
+          <div class="card-back">
+            <h3>WHM</h3>
+            <p>Advanced WHM server & hosting account management skills.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Repeat same structure for all your skills -->
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front"><img src="images/WORDPRESS LOGO.png" alt="WordPress"></div>
+          <div class="card-back"><h3>WordPress</h3><p>Custom themes, plugins, and complete WordPress site development.</p></div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front"><img src="images/HTML LOGO.png" alt="HTML"></div>
+          <div class="card-back"><h3>HTML</h3><p>Building semantic, accessible, and optimized websites.</p></div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front"><img src="images/CSS LOGO.png" alt="CSS"></div>
+          <div class="card-back"><h3>CSS</h3><p>Advanced styling, responsive layouts, animations, and modern UI design with CSS.</p></div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front"><img src="images/JAVA LOGO.png" alt="Java"></div>
+          <div class="card-back"><h3>Java</h3><p>Proficient in Java programming for backend & application development.</p></div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front"><img src="images/SEO LOGO.png" alt="SEO"></div>
+          <div class="card-back"><h3>SEO</h3><p>Optimizing websites for better search engine rankings and visibility.</p></div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front"><img src="images/DNS LOGO.png" alt="DNS"></div>
+          <div class="card-back"><h3>DNS</h3><p>Strong knowledge of DNS records, domain pointing, and server configurations.</p></div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front"><img src="images/PHOTOSHOP LOGO.png" alt="Photoshop"></div>
+          <div class="card-back"><h3>Photoshop</h3><p>Creative graphic design, photo editing, and brand visuals.</p></div>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="card-inner">
+          <div class="card-front"><img src="images/PR LOGO.png" alt="PR"></div>
+          <div class="card-back"><h3>PR</h3><p>Public relations, content creation, and professional brand communications.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<!--Work Section End-->
+<!--Skill section -->
+<!-- ================= Education & Certifications (with notebook vibe + PNGs) ================= -->
+<section id="education-certifications" class="edu-cert-section">
+
+  <!-- Floating school-vibe elements -->
+  <div class="bg-elements">
+    <img src="images/paper-plane (3).png" alt="A+ Grade" class="grade-img">
+    <!-- Paper plane -->
+    <img src="images/paper-plane.png" alt="Paper Plane" class="plane-img">
+    <!-- Code snippet -->
+    <div class="code-snippet">
+      <code id="typing-code"></code>
+    </div>
+  </div>
+
+  <h2 class="section-title">🎓 Education & Certifications</h2>
+
+  <div class="edu-cert-container">
+    <!-- Left: Education -->
+    <div class="education">
+      <h3>B.Sc. Computer Technology (CGPA: 8/10)</h3>
+      <p><strong>Sri Krishna Adithya College of Arts and Science (2020 – 2023)</strong></p>
+      <p>
+        Final Year Project: <em>Ultrasonic-Based Voice-Activated Smart Wheelchair</em> — 
+        Published in International Journal of Research Publication and Reviews
+        <a href="https://ijrpr.com/uploads/V4ISSUE4/IJRPR11859.pdf">View Paper</a>
+      </p>
+    </div>
+
+    <!-- Right: Certificates -->
+    <div class="certifications">
+      <ul class="card-list">
+        <li class="note-card" data-img="images/certification-cPanel-%26-WHM-System-Administrator-I-Certification-Exam-CWSA-1-Arvind.jpg">
+          <img src="images/certification-cPanel-%26-WHM-System-Administrator-I-Certification-Exam-CWSA-1-Arvind.jpg" alt="CWSA-1">
+          <h4>cPanel & WHM – System Administrator (CWSA-1)</h4>
+        </li>
+        <li class="note-card" data-img="images/certification-WHM-Administration-Certification-Exam-CWA-Arvind.jpg">
+          <img src="images/certification-WHM-Administration-Certification-Exam-CWA-Arvind.jpg" alt="CWA">
+          <h4>cPanel & WHM – WHM Administration (CWA)</h4>
+        </li>
+        <li class="note-card" data-img="images/fundamentals%20of%20digital%20marketing.jpg">
+          <img src="images/fundamentals%20of%20digital%20marketing.jpg" alt="Google Digital Garage">
+          <h4>Google Digital Garage</h4>
+        </li>
+        <li class="note-card" data-img="images/Digital%20Marketing.jpg">
+          <img src="images/Digital%20Marketing.jpg" alt="Great Learning">
+          <h4>Great Learning</h4>
+        </li>
+        <li class="note-card" data-img="images/Mr.%20M%20Arvind%20Certificate%20for%20Paper%20Publication%20IJRPR.jpg">
+          <img src="images/Mr.%20M%20Arvind%20Certificate%20for%20Paper%20Publication%20IJRPR.jpg" alt="IJRPR">
+          <h4>IJRPR – Research Paper Publication</h4>
+        </li>
+        <li class="note-card" data-img="images/Paper%20Presentation.jpg">
+          <img src="images/Paper%20Presentation.jpg" alt="Symposium">
+          <h4>Paper Presentation (2022)</h4>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Popup / Lightbox -->
+  <div class="popup" id="cert-popup" aria-hidden="true">
+    <div class="popup-inner" role="dialog" aria-modal="true" aria-label="Certificate preview">
+      <button class="popup-close" aria-label="Close">&times;</button>
+      <img id="popup-img" src="" alt="Certificate preview">
+    </div>
+  </div>
+</section>
+
+<!-- Link CSS -->
+<link rel="stylesheet" href="education-certifications.css">
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const section = document.getElementById('education-certifications');
+    const cards = section.querySelectorAll('.note-card');
+    const popup = document.getElementById('cert-popup');
+    const popupImg = popup.querySelector('#popup-img');
+    const closeBtn = popup.querySelector('.popup-close');
+
+    // Typewriter effect
+    const el = document.getElementById("typing-code");
+    const snippets = [
+      "int main() { return 0; }",
+      "#include <stdio.h>",
+      "public class Hello { }",
+      "<html><body></body></html>",
+      "body { color: red; }"
+    ];
+    let i = 0, j = 0, current = "", deleting = false;
+    function type() {
+      current = snippets[i];
+      if (!deleting) {
+        el.textContent = current.slice(0, j++);
+        if (j > current.length) {
+          deleting = true;
+          setTimeout(type, 1500);
+          return;
+        }
+      } else {
+        el.textContent = current.slice(0, j--);
+        if (j < 0) {
+          deleting = false;
+          i = (i + 1) % snippets.length;
+        }
+      }
+      setTimeout(type, deleting ? 60 : 100);
+    }
+    type();
+
+    // Popup
+    function openPopup(src) {
+      popupImg.src = src;
+      popup.classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePopup() {
+      popup.classList.remove('visible');
+      popupImg.src = '';
+      document.body.style.overflow = '';
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const src = card.dataset.img || card.querySelector('img').src;
+        openPopup(src);
+      });
+    });
+    closeBtn.addEventListener('click', closePopup);
+    popup.addEventListener('click', (e) => { if (e.target === popup) closePopup(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePopup(); });
+  });
+</script>
+
+
+<!-- Education & Certifications Section End -->
+
+<!-- Contact Section -->
+<section id="contact" class="contact-section">
+  <footer class="footer">
+    <div class="game-area">
+  <div class="fish fish1"><span class="eye"></span></div>
+  <div class="fish fish2"><span class="eye"></span></div>
+  <div class="fish fish3"><span class="eye"></span></div>
+  <div class="fish fish4"><span class="eye"></span></div>
+  <div class="fish fish5"><span class="eye"></span></div>
+  <div class="fish fish6"><span class="eye"></span></div>
+  <div class="fish fish7"><span class="eye"></span></div>
+  <div class="fish fish8"><span class="eye"></span></div>
+  <div class="fish fish9"><span class="eye"></span></div>
+  <div class="fish fish10"><span class="eye"></span></div>
+  <div class="fish fish11"><span class="eye"></span></div>
+  <div class="fish fish12"><span class="eye"></span></div>
+  <div class="fish fish13"><span class="eye"></span></div>
+  <div class="fish fish14"><span class="eye"></span></div>
+  <div class="fish fish15"><span class="eye"></span></div>
+
+  <div class="bubble bubble1"></div>
+  <div class="bubble bubble2"></div>
+  <div class="bubble bubble3"></div>
+  <div class="bubble bubble4"></div>
+  <div class="bubble bubble5"></div>
+  <div class="bubble bubble6"></div>
+<div class="bubble bubble7"></div>
+<div class="bubble bubble8"></div>
+<div class="bubble bubble9"></div>
+<div class="bubble bubble10"></div>
+<div class="bubble bubble11"></div>
+<div class="bubble bubble12"></div>
+<div class="bubble bubble13"></div>
+<div class="bubble bubble14"></div>
+<div class="bubble bubble15"></div>
+
+
+  <div class="ground"></div>
+
+  <div class="rock rock1"></div>
+  <div class="rock rock2"></div>
+  <div class="rock rock3"></div>
+</div>
+
+
+    <ul class="social-icons">
+      <li><a href="mailto:arvind.m26@outlook.com"><i class="fas fa-envelope"></i></a></li>
+      <li><a href="https://github.com/Arvind-0526"><i class="fab fa-github"></i></a></li>
+      <li><a href="https://www.linkedin.com/in/arvind-m-761786250/"><i class="fab fa-linkedin-in"></i></a></li>
+      <li><a href="https://in.pinterest.com/arvind05262002/_profile/_created/"><i class="fab fa-pinterest"></i></a></li>
+      <li><a href="https://www.instagram.com/arvind.360/"><i class="fab fa-instagram"></i></a></li>
+    </ul>
+  </footer>
+</section>
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+</body>
+</html>
+
+
