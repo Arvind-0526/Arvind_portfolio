@@ -389,7 +389,6 @@ body.dark-mode .big-left {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-fill-color: transparent;
 }
 
 /* Blue–green gradient for .skills */
@@ -398,7 +397,6 @@ body.dark-mode .skills {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-fill-color: transparent;
 }
 
 
@@ -2241,3 +2239,42 @@ body.dark-mode .game-area::before {
   pointer-events: none;
   z-index: 1;
 }
+/* 🎮 Floating Games Button */
+.floating-games-btn {
+  position: fixed;
+  bottom: 120px;
+  right: 15px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #00ffcc, #0099ff);
+  color: #fff;
+  font-size: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #00eaff, 0 0 30px #00eaff inset;
+  text-decoration: none;
+  transition: transform 0.3s;
+  animation: pulseGlow 2s infinite alternate ease-in-out;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* Hover Effect */
+.floating-games-btn:hover {
+  transform: scale(1.2) rotate(10deg);
+  box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff inset;
+  background: linear-gradient(135deg, #ff00ff, #00ffff);
+}
+
+/* Gaming Glow Animation */
+@keyframes pulseGlow {
+  from {
+    box-shadow: 0 0 8px #00eaff, 0 0 20px #00eaff inset;
+  }
+  to {
+    box-shadow: 0 0 15px #ff00ff, 0 0 35px #ff00ff inset;
+  }
+}
+

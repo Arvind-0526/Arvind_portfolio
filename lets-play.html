@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vice City Arcade</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Monoton&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon-pink: #ff00ff;
+      --neon-blue: #00ffff;
+      --dark-purple: #1a0033;
+    }
+
+    /* Background Animation Inspired by GTA Vice City */
+    body {
+      background: linear-gradient(
+        135deg, 
+        #000033, 
+        #00004d, 
+        #000080, 
+        #00004d, 
+        #000033
+      );
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Neon Grid Overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(to right, rgba(255, 0, 255, 0.1) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: -1;
+      opacity: 0.5;
+    }
+
+    h1, h2 {
+      font-family: 'Bungee Shade', cursive;
+      text-transform: uppercase;
+      -webkit-text-stroke: 1px var(--neon-blue);
+      text-stroke: 1px var(--neon-blue);
+      color: var(--neon-pink);
+      text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 30px var(--neon-blue), 0 0 40px var(--neon-blue);
+    }
+    
+    .text-mono {
+      font-family: 'Monoton', cursive;
+    }
+
+    .neon-text {
+      font-family: 'Monoton', cursive;
+      color: var(--neon-pink);
+      text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 15px var(--neon-blue);
+    }
+
+    .game-card {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid var(--neon-blue);
+    }
+
+    .game-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px var(--neon-pink), 0 0 40px var(--neon-pink), 0 0 60px var(--neon-pink);
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, var(--neon-pink), transparent, var(--neon-blue));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .game-card:hover::before {
+      opacity: 0.2;
+    }
+
+    button, .btn {
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      background: var(--neon-blue);
+      color: var(--dark-purple);
+      border: 2px solid var(--neon-pink);
+      transition: all 0.3s ease;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    button:hover, .btn:hover {
+      background: var(--neon-pink);
+      color: white;
+      border-color: var(--neon-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 0, 255, 0.4);
+    }
+
+    .back-btn {
+      background: transparent;
+      border: 2px solid var(--neon-pink);
+      color: var(--neon-pink);
+    }
+
+    .back-btn:hover {
+      background: var(--neon-pink);
+      color: white;
+      box-shadow: 0 0 10px var(--neon-pink);
+    }
+
+    .whack-hole {
+      background-color: #2b005e;
+      border: 2px solid #ff00ff;
+      box-shadow: 0 0 10px #ff00ff;
+    }
+    .whack-mole {
+      background-color: #00ffff;
+      border-radius: 50%;
+      box-shadow: 0 0 15px #00ffff;
+    }
+
+    /* Ensure game containers are styled */
+    .game-section {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    .snake-head { background-color: var(--neon-pink); }
+    .snake-body { background-color: var(--neon-blue); }
+    .snake-food { background-color: var(--neon-pink); }
+    #snake-canvas { border: 2px solid var(--neon-pink); }
+  </style>
+</head>
+<body class="font-sans text-white text-center p-4 min-h-screen flex flex-col justify-center items-center">
+
+  <!-- Main Game Selection Screen -->
+  <div id="game-menu" class="w-full flex flex-col items-center">
+    <h1 class="text-5xl md:text-7xl lg:text-8xl mt-12 mb-8 neon-text">
+      Vice City Arcade
+    </h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4 w-full max-w-7xl">
+      <div class="game-card p-6 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300" onclick="showGame('checklist')">
+        <div class="text-3xl mb-2">✅</div>
+        <div class="text-lg font-bold text-mono">Life Checklist</div>
+      </div>
+
+     <div class="game-card p-6 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300" onclick="showGame('egg')">
+  <div class="text-3xl mb-2">🥚</div>
+  <div class="text-lg font-bold text-mono">Egg Catcher</div>
+</div>
+
+
+      <div class="game-card p-6 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300" onclick="showGame('snake')">
+        <div class="text-3xl mb-2">🐍</div>
+        <div class="text-lg font-bold text-mono">Snake Game</div>
+      </div>
+      <div class="game-card p-6 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300" onclick="showGame('circle')">
+        <div class="text-3xl mb-2">🎯</div>
+        <div class="text-lg font-bold text-mono">Perfect Circle</div>
+      </div>
+      <div class="game-card p-6 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300" onclick="showGame('rps')">
+        <div class="text-3xl mb-2">✊🖐✌️</div>
+        <div class="text-lg font-bold text-mono">Rock Paper Scissors</div>
+      </div>
+      <div class="game-card p-6 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300" onclick="showGame('whack')">
+        <div class="text-3xl mb-2">🔨</div>
+        <div class="text-lg font-bold text-mono">Whack-a-Mole</div>
+      </div>
+      <div class="game-card p-6 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300" onclick="showGame('tictactoe')">
+        <div class="text-3xl mb-2">❌⭕</div>
+        <div class="text-lg font-bold text-mono">Tic Tac Toe</div>
+      </div>
+      <div class="game-card p-6 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300" onclick="showGame('typing')">
+        <div class="text-3xl mb-2">⌨️</div>
+        <div class="text-lg font-bold text-mono">Typing Speed Test</div>
+      </div>
+      <div class="game-card p-6 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300" onclick="showGame('number')">
+        <div class="text-3xl mb-2">🔢</div>
+        <div class="text-lg font-bold text-mono">Number Guessing</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Containers (Initially Hidden) -->
+  <div id="game-container" class="game-section hidden w-full max-w-2xl bg-black bg-opacity-70 rounded-3xl p-8 mt-8 border-4 border-neon-blue shadow-2xl">
+    <button class="back-btn absolute top-4 left-4 text-white text-lg p-2 rounded-lg" onclick="showGame('menu')">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <div id="game-content" class="w-full flex flex-col items-center"></div>
+  </div>
+
+  <!-- Individual Game HTML Templates -->
+
+  <!-- Life Checklist -->
+  <template id="checklist-template">
+    <div class="flex flex-col items-center w-full">
+      <h2 class="text-4xl mb-4 text-center">Life Checklist</h2>
+      <ul id="taskList" class="list-none p-0 w-full max-w-sm text-lg">
+        <li class="p-3 mb-2 bg-gray-800 rounded-lg flex justify-between items-center transition-all duration-300">
+          Walk the dog
+          <button onclick="toggleCompleted(this)" class="ml-2 text-neon-blue hover:text-white transition-colors duration-300">
+            <i class="fas fa-check-circle"></i>
+          </button>
+        </li>
+      </ul>
+      <div class="flex mt-4 w-full max-w-sm">
+        <input type="text" id="newTaskInput" placeholder="Add a new task..." class="p-3 rounded-l-xl w-full text-black focus:outline-none focus:ring-2 focus:ring-neon-blue">
+        <button onclick="addTask()" class="btn px-6 py-3 rounded-r-xl">Add</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- Egg Catcher Game -->
+<template id="egg-template">
+  <div class="flex flex-col items-center w-full">
+    <h2 class="text-4xl mb-4 text-center">🥚 Egg Catcher</h2>
+    <canvas id="eggCanvas" width="500" height="400" class="border-4 border-neon-blue rounded-3xl"></canvas>
+    <div class="mt-4 text-xl text-neon-blue">Score: <span id="eggScore">0</span></div>
+  </div>
+</template>
+
+
+
+   <!-- Snake Game -->
+  <template id="snake-template">
+    <div class="flex flex-col items-center w-full">
+      <h2 class="text-4xl mb-4">Snake Game</h2>
+      <div class="w-full max-w-md flex justify-between items-center mb-4">
+        <p id="snakeScore" class="text-3xl font-mono">Score: 0</p>
+        <div id="snake-controls" class="space-x-2">
+          <button onclick="startGame()" class="btn px-6 py-3 rounded-full">Start</button>
+          <button onclick="resetGame()" class="btn px-6 py-3 rounded-full">Reset</button>
+        </div>
+      </div>
+      <canvas id="snake-canvas" class="w-full h-80 bg-gray-900 rounded-2xl shadow-lg"></canvas>
+    </div>
+  </template>
+
+  <!-- Perfect Circle -->
+  <template id="circle-template">
+    <div class="flex flex-col items-center w-full">
+      <h2 class="text-4xl mb-4">Perfect Circle</h2>
+      <p id="circle-score" class="text-3xl mb-4 font-mono">Draw a circle to get your score!</p>
+      <div id="circle-container" class="w-full max-w-md h-96 relative">
+        <canvas id="circleCanvas" class="w-full h-full rounded-2xl bg-gray-900 border-2 border-neon-blue"></canvas>
+      </div>
+      <button onclick="resetCircle()" class="btn mt-6 px-8 py-3 rounded-full">Restart</button>
+    </div>
+  </template>
+
+ 
+
+  <!-- Rock Paper Scissors -->
+  <template id="rps-template">
+    <div class="flex flex-col items-center w-full">
+      <h2 class="text-4xl mb-4">Rock Paper Scissors</h2>
+      <p id="rpsScore" class="text-3xl font-mono mb-4">You: 0 | Computer: 0</p>
+      <div class="flex justify-center gap-4 flex-wrap">
+        <button onclick="playRPS('rock')" class="btn px-6 py-3 rounded-full text-4xl">✊</button>
+        <button onclick="playRPS('paper')" class="btn px-6 py-3 rounded-full text-4xl">🖐️</button>
+        <button onclick="playRPS('scissors')" class="btn px-6 py-3 rounded-full text-4xl">✌️</button>
+      </div>
+      <p id="rpsResult" class="text-2xl mt-4 font-bold"></p>
+      <div class="flex justify-center mt-6 space-x-8">
+        <div class="flex flex-col items-center">
+          <img id="playerImage" class="w-24 h-24 rounded-full border-4 border-neon-blue shadow-lg" alt="">
+          <p class="mt-2 text-xl">You</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <img id="computerImage" class="w-24 h-24 rounded-full border-4 border-neon-pink shadow-lg" alt="">
+          <p class="mt-2 text-xl">Computer</p>
+        </div>
+      </div>
+      <button onclick="resetRPS()" class="btn mt-6 px-8 py-3 rounded-full">Reset</button>
+    </div>
+  </template>
+
+  <!-- Whack-a-Mole -->
+  <template id="whack-template">
+    <div class="flex flex-col items-center w-full">
+      <h2 class="text-4xl mb-4">Whack-a-Mole</h2>
+      <p id="whackScore" class="text-3xl font-mono mb-4">Score: 0</p>
+      <div class="grid grid-cols-3 gap-4 w-full max-w-md">
+        <div class="whack-hole w-full h-32 rounded-full flex justify-center items-center cursor-pointer" onclick="whackMole(0)"></div>
+        <div class="whack-hole w-full h-32 rounded-full flex justify-center items-center cursor-pointer" onclick="whackMole(1)"></div>
+        <div class="whack-hole w-full h-32 rounded-full flex justify-center items-center cursor-pointer" onclick="whackMole(2)"></div>
+        <div class="whack-hole w-full h-32 rounded-full flex justify-center items-center cursor-pointer" onclick="whackMole(3)"></div>
+        <div class="whack-hole w-full h-32 rounded-full flex justify-center items-center cursor-pointer" onclick="whackMole(4)"></div>
+        <div class="whack-hole w-full h-32 rounded-full flex justify-center items-center cursor-pointer" onclick="whackMole(5)"></div>
+        <div class="whack-hole w-full h-32 rounded-full flex justify-center items-center cursor-pointer" onclick="whackMole(6)"></div>
+        <div class="whack-hole w-full h-32 rounded-full flex justify-center items-center cursor-pointer" onclick="whackMole(7)"></div>
+        <div class="whack-hole w-full h-32 rounded-full flex justify-center items-center cursor-pointer" onclick="whackMole(8)"></div>
+      </div>
+      <div class="flex space-x-4 mt-6">
+        <button id="startWhack" class="btn px-6 py-3 rounded-full">Start</button>
+        <button id="stopWhack" class="btn px-6 py-3 rounded-full">Stop</button>
+        <button id="retryWhack" class="btn px-6 py-3 rounded-full">Retry</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- Tic Tac Toe -->
+  <template id="tictactoe-template">
+    <div class="flex flex-col items-center w-full">
+      <h2 class="text-4xl mb-4">Tic Tac Toe</h2>
+      <p id="tictactoe-status" class="text-2xl mb-4 font-mono"></p>
+      <div class="grid grid-cols-3 gap-2 w-72 h-72">
+        <div class="tictactoe-cell w-full h-24 bg-gray-900 flex justify-center items-center text-4xl font-bold cursor-pointer rounded-lg border-2 border-neon-blue" data-index="0"></div>
+        <div class="tictactoe-cell w-full h-24 bg-gray-900 flex justify-center items-center text-4xl font-bold cursor-pointer rounded-lg border-2 border-neon-blue" data-index="1"></div>
+        <div class="tictactoe-cell w-full h-24 bg-gray-900 flex justify-center items-center text-4xl font-bold cursor-pointer rounded-lg border-2 border-neon-blue" data-index="2"></div>
+        <div class="tictactoe-cell w-full h-24 bg-gray-900 flex justify-center items-center text-4xl font-bold cursor-pointer rounded-lg border-2 border-neon-blue" data-index="3"></div>
+        <div class="tictactoe-cell w-full h-24 bg-gray-900 flex justify-center items-center text-4xl font-bold cursor-pointer rounded-lg border-2 border-neon-blue" data-index="4"></div>
+        <div class="tictactoe-cell w-full h-24 bg-gray-900 flex justify-center items-center text-4xl font-bold cursor-pointer rounded-lg border-2 border-neon-blue" data-index="5"></div>
+        <div class="tictactoe-cell w-full h-24 bg-gray-900 flex justify-center items-center text-4xl font-bold cursor-pointer rounded-lg border-2 border-neon-blue" data-index="6"></div>
+        <div class="tictactoe-cell w-full h-24 bg-gray-900 flex justify-center items-center text-4xl font-bold cursor-pointer rounded-lg border-2 border-neon-blue" data-index="7"></div>
+        <div class="tictactoe-cell w-full h-24 bg-gray-900 flex justify-center items-center text-4xl font-bold cursor-pointer rounded-lg border-2 border-neon-blue" data-index="8"></div>
+      </div>
+      <button onclick="resetTicTacToe()" class="btn mt-6 px-8 py-3 rounded-full">Restart</button>
+    </div>
+  </template>
+
+  <!-- Typing Speed Test -->
+  <template id="typing-template">
+    <div class="flex flex-col items-center w-full">
+      <h2 class="text-4xl mb-4">Typing Speed Test</h2>
+      <p id="typing-passage" class="text-lg p-6 bg-gray-900 rounded-lg w-full max-w-xl leading-relaxed text-gray-300"></p>
+      <textarea id="typing-input" class="w-full max-w-xl h-32 p-4 mt-4 text-lg text-black bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-neon-pink" placeholder="Start typing here..."></textarea>
+      <div class="mt-6 flex space-x-4">
+        <button id="typing-start" class="btn px-6 py-3 rounded-full">Start</button>
+        <button id="typing-retry" class="btn px-6 py-3 rounded-full">Retry</button>
+      </div>
+      <p id="typing-result" class="text-3xl mt-6 font-mono"></p>
+      <p id="typing-feedback" class="text-xl mt-2 font-bold"></p>
+    </div>
+  </template>
+
+  <!-- Number Guessing -->
+  <template id="number-template">
+    <div class="flex flex-col items-center w-full">
+      <h2 class="text-4xl mb-4">Number Guessing</h2>
+      <p id="number-status" class="text-2xl font-mono mb-4"></p>
+      <div class="flex space-x-2">
+        <input type="number" id="guessInput" class="p-3 w-40 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-neon-pink">
+        <button id="guessButton" class="btn px-6 py-3 rounded-lg">Guess</button>
+      </div>
+      <button id="number-retry" class="btn mt-6 px-6 py-3 rounded-full">Restart</button>
+    </div>
+  </template>
+
+  <!-- JavaScript for game logic and page flow -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      showGame('menu');
+    });
+
+    function showGame(gameId) {
+      const menu = document.getElementById('game-menu');
+      const container = document.getElementById('game-container');
+      const content = document.getElementById('game-content');
+      const templates = {
+        'menu': null,
+        'checklist': document.getElementById('checklist-template'),
+        'egg': document.getElementById('egg-template'),
+        'circle': document.getElementById('circle-template'),
+        'snake': document.getElementById('snake-template'),
+        'rps': document.getElementById('rps-template'),
+        'whack': document.getElementById('whack-template'),
+        'tictactoe': document.getElementById('tictactoe-template'),
+        'typing': document.getElementById('typing-template'),
+        'number': document.getElementById('number-template')
+      };
+
+      // Hide all game content and show menu
+      if (gameId === 'menu') {
+        container.classList.add('hidden');
+        menu.classList.remove('hidden');
+      } else {
+        // Show specific game
+        menu.classList.add('hidden');
+        container.classList.remove('hidden');
+        content.innerHTML = '';
+        if (templates[gameId]) {
+          content.appendChild(templates[gameId].content.cloneNode(true));
+          // Call game-specific initialization function
+          if (window[gameId + 'Init']) {
+            window[gameId + 'Init']();
+          }
+        }
+      }
+    }
+
+    // --- Life Checklist Game ---
+    function checklistInit() {
+      // Logic from user's original file
+    }
+    function addTask() {
+      const taskInput = document.getElementById('newTaskInput');
+      const taskList = document.getElementById('taskList');
+      const taskText = taskInput.value.trim();
+
+      if (taskText !== '') {
+        const li = document.createElement('li');
+        li.className = 'p-3 mb-2 bg-gray-800 rounded-lg flex justify-between items-center transition-all duration-300';
+        li.innerHTML = `
+          <span>${taskText}</span>
+          <button onclick="toggleCompleted(this)" class="ml-2 text-neon-blue hover:text-white transition-colors duration-300">
+            <i class="fas fa-check-circle"></i>
+          </button>
+        `;
+        taskList.appendChild(li);
+        taskInput.value = '';
+      }
+    }
+
+    function toggleCompleted(button) {
+      const taskSpan = button.parentElement.querySelector('span');
+      taskSpan.classList.toggle('line-through');
+      taskSpan.classList.toggle('opacity-60');
+    }
+
+   // --- Egg Catcher Game ---
+function eggInit() {
+  const canvas = document.getElementById('eggCanvas');
+  const ctx = canvas.getContext('2d');
+  const scoreDisplay = document.getElementById('eggScore');
+
+  const basket = {
+    width: 60,
+    height: 20,
+    x: canvas.width / 2 - 30,
+    y: canvas.height - 30
+  };
+
+  const eggs = [];
+  let score = -1; // start penalty
+  let gameRunning = true;
+  let eggSpeed = 2; // initial speed
+  let spawnIntervalTime = 1000; // eggs spawn faster
+  const wrongEggChance = 0.3; // 30% eggs are “wrong”
+
+  scoreDisplay.textContent = score;
+
+  // Egg spawning
+  const eggInterval = setInterval(() => {
+    if (!gameRunning) return;
+    const x = Math.random() * (canvas.width - 20) + 10;
+    const isWrong = Math.random() < wrongEggChance;
+    eggs.push({ x: x, y: 0, radius: 10, speed: eggSpeed, wrong: isWrong });
+  }, spawnIntervalTime);
+
+  // Increase egg speed gradually
+  const speedIncrease = setInterval(() => {
+    eggSpeed += 0.5;  // increase faster
+  }, 3000);
+
+  // Mouse movement controls basket
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    basket.x = e.clientX - rect.left - basket.width / 2;
+    if (basket.x < 0) basket.x = 0;
+    if (basket.x + basket.width > canvas.width) basket.x = canvas.width - basket.width;
+  });
+
+  function drawBasket() {
+    ctx.fillStyle = '#ff00ff';
+    ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
+    ctx.strokeStyle = '#00ffff';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(basket.x, basket.y, basket.width, basket.height);
+  }
+
+  function drawEggs() {
+    eggs.forEach((egg, index) => {
+      ctx.beginPath();
+      ctx.arc(egg.x, egg.y, egg.radius, 0, Math.PI * 2);
+      ctx.fillStyle = egg.wrong ? '#ff0000' : '#00ffff'; // red for wrong egg
+      ctx.fill();
+      ctx.strokeStyle = '#ff00ff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.closePath();
+
+      // Move egg
+      egg.y += egg.speed;
+
+      // Check collision with basket
+      if (
+        egg.y + egg.radius >= basket.y &&
+        egg.x > basket.x &&
+        egg.x < basket.x + basket.width
+      ) {
+        // Only normal eggs give +1, wrong eggs are ignored
+        if (!egg.wrong) score += 1;
+        eggs.splice(index, 1);
+        scoreDisplay.textContent = score;
+      }
+
+      // Egg missed
+      if (egg.y - egg.radius > canvas.height) {
+        if (!egg.wrong) score -= 2; // penalty for missing normal egg
+        eggs.splice(index, 1);
+        scoreDisplay.textContent = score;
+        if (score <= 0) endGame();
+      }
+    });
+  }
+
+  function endGame() {
+    gameRunning = false;
+    clearInterval(eggInterval);
+    clearInterval(speedIncrease);
+    alert('Game Over! Final Score: ' + score);
+  }
+
+  function gameLoop() {
+    if (!gameRunning) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBasket();
+    drawEggs();
+    requestAnimationFrame(gameLoop);
+  }
+
+  gameLoop();
+}
+
+
+
+
+    // --- Snake Game ---
+    let snakeCanvas, snakeCtx;
+    let snake, food, scoreSnake, direction;
+    let gameLoopInterval;
+    const gridSize = 20;
+
+    function snakeInit() {
+      snakeCanvas = document.getElementById('snake-canvas');
+      snakeCtx = snakeCanvas.getContext('2d');
+      snakeCanvas.width = 400; // Fixed size for simplicity
+      snakeCanvas.height = 400;
+      resetGame();
+    }
+    
+    function resetGame() {
+      clearInterval(gameLoopInterval);
+      snake = [{ x: 10, y: 10 }];
+      food = generateFood();
+      scoreSnake = 0;
+      direction = 'right';
+      document.getElementById('snakeScore').textContent = `Score: ${scoreSnake}`;
+      drawGame();
+    }
+    
+    function generateFood() {
+      const x = Math.floor(Math.random() * (snakeCanvas.width / gridSize));
+      const y = Math.floor(Math.random() * (snakeCanvas.height / gridSize));
+      return { x, y };
+    }
+    
+    function drawGame() {
+      snakeCtx.fillStyle = '#111';
+      snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+      
+      // Draw food
+      snakeCtx.fillStyle = '#ff00ff';
+      snakeCtx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+      
+      // Draw snake
+      snake.forEach((segment, index) => {
+        snakeCtx.fillStyle = index === 0 ? '#00ffff' : '#00aaff';
+        snakeCtx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+        snakeCtx.strokeStyle = '#2b005e';
+        snakeCtx.strokeRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+      });
+    }
+    
+    function updateGame() {
+      const head = { x: snake[0].x, y: snake[0].y };
+      
+      switch (direction) {
+        case 'up': head.y--; break;
+        case 'down': head.y++; break;
+        case 'left': head.x--; break;
+        case 'right': head.x++; break;
+      }
+      
+      snake.unshift(head);
+      
+      // Check for collision
+      if (head.x < 0 || head.x * gridSize >= snakeCanvas.width || head.y < 0 || head.y * gridSize >= snakeCanvas.height || snake.slice(1).some(s => s.x === head.x && s.y === head.y)) {
+        clearInterval(gameLoopInterval);
+        alert('Game Over! Your score: ' + scoreSnake);
+        return;
+      }
+      
+      // Check for food
+      if (head.x === food.x && head.y === food.y) {
+        scoreSnake++;
+        document.getElementById('snakeScore').textContent = `Score: ${scoreSnake}`;
+        food = generateFood();
+      } else {
+        snake.pop();
+      }
+      
+      drawGame();
+    }
+
+    function startGame() {
+      resetGame();
+      gameLoopInterval = setInterval(updateGame, 100);
+    }
+    
+    document.addEventListener('keydown', e => {
+      const key = e.key;
+      if (key === 'ArrowUp' && direction !== 'down') direction = 'up';
+      if (key === 'ArrowDown' && direction !== 'up') direction = 'down';
+      if (key === 'ArrowLeft' && direction !== 'right') direction = 'left';
+      if (key === 'ArrowRight' && direction !== 'left') direction = 'right';
+    });
+ 
+
+    // --- Perfect Circle Game ---
+    let circleCanvas, circleCtx, drawing = false;
+    let perfectCircle = { x: 0, y: 0, radius: 0 };
+    let points = [];
+
+    function circleInit() {
+      circleCanvas = document.getElementById('circleCanvas');
+      circleCtx = circleCanvas.getContext('2d');
+      const container = document.getElementById('circle-container');
+      circleCanvas.width = container.offsetWidth;
+      circleCanvas.height = container.offsetHeight;
+
+      circleCanvas.addEventListener('mousedown', startDrawing);
+      circleCanvas.addEventListener('mouseup', stopDrawing);
+      circleCanvas.addEventListener('mousemove', draw);
+      circleCanvas.addEventListener('touchstart', (e) => startDrawing(e.touches[0]));
+      circleCanvas.addEventListener('touchend', stopDrawing);
+      circleCanvas.addEventListener('touchmove', (e) => draw(e.touches[0]));
+      
+      resetCircle();
+    }
+    
+    function startDrawing(e) {
+      drawing = true;
+      points = [];
+      const rect = circleCanvas.getBoundingClientRect();
+      perfectCircle.x = e.clientX - rect.left;
+      perfectCircle.y = e.clientY - rect.top;
+      
+      circleCtx.clearRect(0, 0, circleCanvas.width, circleCanvas.height);
+      document.getElementById('circle-score').textContent = 'Drawing...';
+    }
+    
+    function stopDrawing() {
+      drawing = false;
+      if (points.length > 5) {
+        calculateScore();
+      } else {
+        document.getElementById('circle-score').textContent = 'Not enough points to score. Try again!';
+      }
+    }
+    
+    function draw(e) {
+      if (!drawing) return;
+      const rect = circleCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      points.push({x, y});
+      
+      circleCtx.beginPath();
+      circleCtx.moveTo(x, y);
+      circleCtx.lineTo(x, y);
+      circleCtx.strokeStyle = 'rgba(0, 255, 255, 0.8)';
+      circleCtx.lineWidth = 4;
+      circleCtx.lineCap = 'round';
+      circleCtx.stroke();
+    }
+    
+    function calculateScore() {
+      if (points.length < 2) return 0;
+
+      // Find center and average radius
+      let sumX = 0, sumY = 0;
+      points.forEach(p => {
+        sumX += p.x;
+        sumY += p.y;
+      });
+      const centerX = sumX / points.length;
+      const centerY = sumY / points.length;
+
+      let sumRadius = 0;
+      points.forEach(p => {
+        sumRadius += Math.sqrt(Math.pow(p.x - centerX, 2) + Math.pow(p.y - centerY, 2));
+      });
+      const avgRadius = sumRadius / points.length;
+
+      // Calculate score based on variance from average radius
+      let varianceSum = 0;
+      points.forEach(p => {
+        const radius = Math.sqrt(Math.pow(p.x - centerX, 2) + Math.pow(p.y - centerY, 2));
+        varianceSum += Math.pow(radius - avgRadius, 2);
+      });
+
+      const variance = varianceSum / points.length;
+      const score = Math.max(0, 100 - Math.sqrt(variance) * 5); // A simple formula for scoring
+
+      document.getElementById('circle-score').textContent = `Your Score: ${score.toFixed(2)}% Perfect!`;
+
+      // Draw the "perfect" circle for comparison
+      circleCtx.beginPath();
+      circleCtx.arc(centerX, centerY, avgRadius, 0, Math.PI * 2);
+      circleCtx.strokeStyle = 'rgba(255, 0, 255, 0.5)';
+      circleCtx.lineWidth = 2;
+      circleCtx.stroke();
+    }
+    
+    function resetCircle() {
+      circleCtx.clearRect(0, 0, circleCanvas.width, circleCanvas.height);
+      points = [];
+      document.getElementById('circle-score').textContent = 'Draw a circle to get your score!';
+    }
+
+
+   
+
+    // --- Rock Paper Scissors Game ---
+    let rpsUserScore = 0;
+    let rpsComputerScore = 0;
+
+    function rpsInit() {
+      // Reset scores and display
+      rpsUserScore = 0;
+      rpsComputerScore = 0;
+      document.getElementById('rpsScore').innerText = `You: 0 | Computer: 0`;
+      document.getElementById('rpsResult').innerText = "";
+      document.getElementById("playerImage").src = "";
+      document.getElementById("computerImage").src = "";
+    }
+
+    function playRPS(playerChoice) {
+      const choices = ['rock', 'paper', 'scissors'];
+      const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+      let result = '';
+
+      if (playerChoice === computerChoice) {
+        result = "It's a tie!";
+      } else if (
+        (playerChoice === 'rock' && computerChoice === 'scissors') ||
+        (playerChoice === 'paper' && computerChoice === 'rock') ||
+        (playerChoice === 'scissors' && computerChoice === 'paper')
+      ) {
+        result = "You win!";
+        rpsUserScore++;
+      } else {
+        result = "You lose!";
+        rpsComputerScore++;
+      }
+      document.getElementById('rpsResult').innerText = result;
+      document.getElementById('rpsScore').innerText = `You: ${rpsUserScore} | Computer: ${rpsComputerScore}`;
+      document.getElementById("playerImage").src = `https://placehold.co/100x100?text=${playerChoice.charAt(0).toUpperCase()}`;
+      document.getElementById("computerImage").src = `https://placehold.co/100x100?text=${computerChoice.charAt(0).toUpperCase()}`;
+    }
+
+    function resetRPS() {
+      rpsInit();
+    }
+
+    // --- Whack-a-Mole ---
+    let moleTimer;
+    let whackScore = 0;
+    let currentMoleIndex = -1;
+
+    function whackInit() {
+      whackScore = 0;
+      currentMoleIndex = -1;
+      document.getElementById('whackScore').textContent = `Score: 0`;
+      const holes = document.querySelectorAll('.whack-hole');
+      holes.forEach(h => h.innerHTML = '');
+      
+      document.getElementById('startWhack').addEventListener('click', () => {
+        if (!moleTimer) {
+          startWhackGame();
+        }
+      });
+      document.getElementById('stopWhack').addEventListener('click', stopWhackGame);
+      document.getElementById('retryWhack').addEventListener('click', resetWhackGame);
+    }
+
+    function startWhackGame() {
+      moleTimer = setInterval(showMole, 1000);
+    }
+    function stopWhackGame() {
+      clearInterval(moleTimer);
+      moleTimer = null;
+      document.querySelectorAll('.whack-hole').forEach(h => h.innerHTML = '');
+    }
+    function resetWhackGame() {
+      stopWhackGame();
+      whackScore = 0;
+      document.getElementById('whackScore').textContent = `Score: 0`;
+    }
+    function showMole() {
+      const holes = document.querySelectorAll('.whack-hole');
+      if (currentMoleIndex !== -1) {
+        holes[currentMoleIndex].innerHTML = '';
+      }
+      const newIndex = Math.floor(Math.random() * holes.length);
+      holes[newIndex].innerHTML = '<div class="whack-mole w-1/2 h-1/2"></div>';
+      currentMoleIndex = newIndex;
+    }
+
+    function whackMole(holeIndex) {
+      if (holeIndex === currentMoleIndex) {
+        whackScore++;
+        document.getElementById('whackScore').textContent = `Score: ${whackScore}`;
+        const holes = document.querySelectorAll('.whack-hole');
+        holes[currentMoleIndex].innerHTML = '';
+        currentMoleIndex = -1;
+      }
+    }
+
+
+    // --- Tic Tac Toe ---
+    let tictactoeBoard, tictactoeCells, currentPlayer, gameActive;
+
+    function tictactoeInit() {
+      tictactoeBoard = ['', '', '', '', '', '', '', '', ''];
+      currentPlayer = 'X';
+      gameActive = true;
+      tictactoeCells = document.querySelectorAll('.tictactoe-cell');
+      tictactoeCells.forEach(cell => {
+        cell.innerHTML = '';
+        cell.addEventListener('click', handleCellClick);
+      });
+      updateStatus(`Player ${currentPlayer}'s turn`);
+    }
+
+    function handleCellClick(e) {
+      const cell = e.target;
+      const index = cell.dataset.index;
+      if (tictactoeBoard[index] === '' && gameActive) {
+        tictactoeBoard[index] = currentPlayer;
+        cell.innerHTML = currentPlayer === 'X' ? '<span class="text-neon-pink">X</span>' : '<span class="text-neon-blue">O</span>';
+        checkResult();
+      }
+    }
+
+    function updateStatus(message) {
+      document.getElementById('tictactoe-status').textContent = message;
+    }
+
+    const winConditions = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+
+    function checkResult() {
+      let roundWon = false;
+      for (let i = 0; i < winConditions.length; i++) {
+        const condition = winConditions[i];
+        const a = tictactoeBoard[condition[0]];
+        const b = tictactoeBoard[condition[1]];
+        const c = tictactoeBoard[condition[2]];
+        if (a === '' || b === '' || c === '') {
+          continue;
+        }
+        if (a === b && b === c) {
+          roundWon = true;
+          break;
+        }
+      }
+
+      if (roundWon) {
+        updateStatus(`Player ${currentPlayer} has won!`);
+        gameActive = false;
+        return;
+      }
+
+      const roundDraw = !tictactoeBoard.includes('');
+      if (roundDraw) {
+        updateStatus('Game is a draw!');
+        gameActive = false;
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      updateStatus(`Player ${currentPlayer}'s turn`);
+    }
+
+    function resetTicTacToe() {
+      tictactoeInit();
+    }
+
+
+    // --- Typing Speed Test ---
+    let typingPassage, typingInput, typingStartBtn, typingRetryBtn, typingResult, typingFeedback;
+    let timer, startTime;
+
+    function typingInit() {
+      typingPassage = document.getElementById('typing-passage');
+      typingInput = document.getElementById('typing-input');
+      typingStartBtn = document.getElementById('typing-start');
+      typingRetryBtn = document.getElementById('typing-retry');
+      typingResult = document.getElementById('typing-result');
+      typingFeedback = document.getElementById('typing-feedback');
+
+      const passages = [
+        "The quick brown fox jumps over the lazy dog.",
+        "Pack my box with five dozen liquor jugs.",
+        "How vexingly quick daft zebras jump!"
+      ];
+      typingPassage.textContent = passages[Math.floor(Math.random() * passages.length)];
+      typingInput.disabled = true;
+      typingInput.value = '';
+      typingResult.textContent = '';
+      typingFeedback.textContent = '';
+      
+      typingStartBtn.onclick = startTypingTest;
+      typingRetryBtn.onclick = typingInit;
+    }
+
+    function startTypingTest() {
+      typingInput.value = '';
+      typingInput.disabled = false;
+      typingInput.focus();
+      startTime = new Date().getTime();
+      typingInput.addEventListener('input', checkTyping);
+    }
+
+    function checkTyping() {
+      const typedText = typingInput.value;
+      const fullText = typingPassage.textContent;
+      if (typedText === fullText) {
+        const endTime = new Date().getTime();
+        const timeTaken = (endTime - startTime) / 1000;
+        const wordsPerMinute = Math.round((fullText.split(' ').length / timeTaken) * 60);
+        typingResult.textContent = `Your WPM: ${wordsPerMinute}`;
+        
+        // Provide feedback based on WPM
+        let feedback = '';
+        if (wordsPerMinute < 30) {
+            feedback = "Need to Improve";
+        } else if (wordsPerMinute >= 30 && wordsPerMinute < 50) {
+            feedback = "Good";
+        } else {
+            feedback = "Very Good";
+        }
+        typingFeedback.textContent = feedback;
+
+        typingInput.disabled = true;
+      }
+    }
+
+
+    // --- Number Guessing ---
+    let secretNumber, guessCount;
+
+    function numberInit() {
+      secretNumber = Math.floor(Math.random() * 100) + 1;
+      guessCount = 0;
+      document.getElementById('guessInput').value = '';
+      document.getElementById('number-status').textContent = "Guess a number between 1 and 100.";
+      document.getElementById('guessButton').onclick = checkGuess;
+      document.getElementById('number-retry').onclick = numberInit;
+    }
+
+    function checkGuess() {
+      const userGuess = parseInt(document.getElementById('guessInput').value);
+      if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+        document.getElementById('number-status').textContent = "Please enter a valid number between 1 and 100.";
+        return;
+      }
+
+      guessCount++;
+      let message = '';
+      if (userGuess === secretNumber) {
+        message = `You got it! It took you ${guessCount} guesses.`;
+      } else if (userGuess < secretNumber) {
+        message = "Too low. Try again.";
+      } else {
+        message = "Too high. Try again.";
+      }
+      document.getElementById('number-status').textContent = message;
+    }
+  </script>
+</body>
+</html>
